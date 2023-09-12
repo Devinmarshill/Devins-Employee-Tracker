@@ -127,7 +127,7 @@ LEFT JOIN employee AS supervisors ON employee.manager_id=supervisors.id;`, (err,
     })
 }
 function addDepartment() {
-    db.query("SELECT id as value, title as name from role", (err, departmentData) => {
+    db.query("SELECT * FROM department", (err, departmentData) => {
         db.query("SELECT id as value, CONCAT(department_id) as name FROM department WHERE department_id is null", (err, departmentData) => {
             inquirer.prompt([
                 {
@@ -155,8 +155,19 @@ LEFT JOIN employee AS supervisors ON employee.manager_id=supervisors.id;`, (err,
     })
 }
 function addRole() {
-    db.query("SELECT role_id as value as name from role", (err, roleData) => {
-        db.query("SELECT id as value, CONCAT(role_id) as name FROM employee WHERE role_id is null")
+    db.query("INSERT into role_id as value as name from role", (err, roleData) => {
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "choose the following title",
+                name: "role_id",
+                choices: roleData
 
+            }
+        ]).then(answer => {
+            db.query("UPDATE employee SET role_id=? WHERE id=?", (answer.role_id), err => {
+                viewEmployees()
+            })
+        })
     })
 }
