@@ -21,28 +21,22 @@ function mainMenu() {
         name: "choices",
         choices: ["View all Departments", "View all Roles", "View all Employees", "Add a Department", "Add a Role", "Add an Employee", "Update an Employee Role"]
     })
-        .then(answer => {
-            if (answer.choices === "View all Employees") {
+        .then((answers) => {
+            if (answers.choices === "View all Employees") {
                 viewEmployees()
-            } else if (answer.choices === "Add an Employee") {
+            } else if (answers.choices === "Add an Employee") {
                 addEmployees()
-            } else if (answer.choices === "Update an Employee Role") {
+            } else if (answers.choices === "Update an Employee Role") {
                 updateEmployee()
             }
-
-        })
-        .then(answer => {
-            if (answer.choices === "View all Departments") {
+            else if (answers.choices === "View all Departments") {
                 viewDepartments()
-            } else if (answer.choices === "Add a Department") {
+            } else if (answers.choices === "Add a Department") {
                 addDepartment()
             }
-
-        })
-        .then(answer => {
-            if (answer.choices === "View all Roles") {
+            else if (answers.choices === "View all Roles") {
                 viewRoles()
-            } else if (answer.choices === "Add a Role") {
+            } else if (answers.choices === "Add a Role") {
                 addRole()
             }
 

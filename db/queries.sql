@@ -1,4 +1,4 @@
-USE chunks_db;
+USE employee_db;
 
 SELECT * FROM department;
 
