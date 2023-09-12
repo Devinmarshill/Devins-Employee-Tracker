@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS chunks_db;
-CREATE DATABASE chunks_db
+CREATE DATABASE chunks_db;
 
 USE chunks_db;
 
@@ -12,7 +12,7 @@ CREATE TABLE role (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
-    review TEXT NOT NULL,
+    department_id INT,
     FOREIGN KEY (department_id)
     REFERENCES department(id)
     ON DELETE SET NULL
@@ -25,10 +25,8 @@ CREATE TABLE employee (
     role_id INT NOT NULL,
     manager_id INT,
     FOREIGN KEY (role_id)
-    REFERENCES role(id)
-    ON DELETE SET NULL,
-
+    REFERENCES role(id),
     FOREIGN KEY (manager_id)
     REFERENCES employee(id)
-    ON DELETE SET NULL,
+    ON DELETE SET NULL
 );
