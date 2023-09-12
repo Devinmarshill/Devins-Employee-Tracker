@@ -53,20 +53,110 @@ LEFT JOIN employee AS supervisors ON employee.manager_id=supervisors.id;`, (err,
     })
 }
 function addEmployees() {
+    db.query("SELECT id as value, title as name from role", (err, roleData) => {
+        db.query("SELECT id as value, CONCAT(first_name, ' ', last_name) as name FROM employee WHERE manager_id is null", (err, managerData) => {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "What is the First Name",
+                    name: "first_name",
 
+                },
+                {
+                    type: "input",
+                    message: "What is the last Name",
+                    name: "last_name",
+
+                },
+                {
+                    type: "rawlist",
+                    message: "choose the following title",
+                    name: "role_id",
+                    choices: roleData
+
+                },
+                {
+                    type: "rawlist",
+                    message: "choose the following manager",
+                    name: "manager_id",
+                    choices: managerData
+
+                },
+            ]).then(answer => {
+                db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)", [answer.first_name, answer.last_name, answer.role_id, answer.manager_id],
+                    err => {
+                        viewEmployees()
+                    })
+            })
+        })
+    })
 }
 function updateEmployee() {
+    db.query("SELECT id as value, title as name from role", (err, roleData) => {
+        db.query("SELECT id as value, CONCAT(first_name, ' ', last_name) as name FROM employee WHERE manager_id is null", (err, employeeData) => {
+            inquirer.prompt([
+                {
+                    type: "list",
+                    message: "choose the following title",
+                    name: "role_id",
+                    choices: roleData
 
+                },
+                {
+                    type: "list",
+                    message: "choose the following employee",
+                    name: "employee_id",
+                    choices: employeeData
+
+                },
+            ]).then(answer => {
+                db.query("UPDATE employee SET role_id=? WHERE id=?", (answer.role_id, answer.employee_id), err => {
+                    viewEmployees()
+                })
+            })
+        })
+    })
 }
 function viewDepartments() {
-
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, title, name AS department, salary, CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS Manager FROM employee
+LEFT JOIN role ON employee.role_id = role.id
+LEFT JOIN department ON department.id=role.department_id
+LEFT JOIN employee AS supervisors ON employee.manager_id=supervisors.id;`, (err, data) => {
+        printTable(data)
+        mainMenu()
+    })
 }
 function addDepartment() {
+    db.query("SELECT id as value, title as name from role", (err, departmentData) => {
+        db.query("SELECT id as value, CONCAT(department_id) as name FROM department WHERE department_id is null", (err, departmentData) => {
+            inquirer.prompt([
+                {
+                    type: "input",
+                    message: "What is the name of the Department",
+                    name: "department_id",
 
+                }
+            ]).then(answer => {
+                db.query("INSERT INTO department (department) VALUES(?)", [answer.department],
+                    err => {
+                        viewDepartments()
+                    })
+            })
+        })
+    })
 }
 function viewRoles() {
-
+    db.query(`SELECT employee.id, employee.first_name, employee.last_name, title, name AS department, salary, CONCAT(supervisors.first_name, ' ', supervisors.last_name) AS Manager FROM employee
+LEFT JOIN role ON employee.role_id = role.id
+LEFT JOIN department ON department.id=role.department_id
+LEFT JOIN employee AS supervisors ON employee.manager_id=supervisors.id;`, (err, data) => {
+        printTable(data)
+        mainMenu()
+    })
 }
 function addRole() {
+    db.query("SELECT role_id as value as name from role", (err, roleData) => {
+        db.query("SELECT id as value, CONCAT(role_id) as name FROM employee WHERE role_id is null")
 
+    })
 }
